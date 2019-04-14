@@ -1,7 +1,8 @@
 #include <iostream>
 #include<memory>
+#include"decoratorflying.cpp"
 
-class Icomponent {
+/*class Icomponent {
 
 public:
   virtual void Operation ()=0;
@@ -34,10 +35,11 @@ public :
   virtual void Operation () {
     std::cout<<" Hello";
     m_component->Operation() ; }
-};
+};*/
 
 
 int main (){
-  DecoratorTwo object (new DecoratorOne(new Component));
-  object.Operation();
+  std::cout<<" The program started"<<std::endl;
+  DecorforAcceleration F35A(new DecorforFuel (new F35()));
+F35A.Move();
 }
