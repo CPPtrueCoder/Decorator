@@ -6,55 +6,55 @@ struct Coordinates {
 };
 
 class MovingTarget {
-public:
+ public:
   virtual void Move() = 0;
   virtual ~MovingTarget() {}
 };
 
 class F35 : public MovingTarget {
-public:
+ public:
   F35() {
     coordinates.x = 0;
     coordinates.y = 0;
   }
   virtual void Move() {
-    for (int i = 0; i < 10; i++){
-      coordinates.x =coordinates.x +i;
-      coordinates.y = coordinates.y+i;
-    std::cout << "X: " << coordinates.x << std::endl;
-    std::cout << "Y: " << coordinates.y << std::endl;}
+    for (int i = 0; i < 10; i++) {
+      coordinates.x = coordinates.x + i;
+      coordinates.y = coordinates.y + i;
+      std::cout << "X: " << coordinates.x << std::endl;
+      std::cout << "Y: " << coordinates.y << std::endl;
+    }
   }
 
-private:
+ private:
   Coordinates coordinates;
 };
 
 class DecorforFuel : public MovingTarget {
   std::shared_ptr<MovingTarget> moving_target;
 
-public:
-  DecorforFuel(MovingTarget *target) : moving_target(target) {  }
+ public:
+  DecorforFuel(MovingTarget* target) : moving_target(target) {}
   virtual void Move() {
     moving_target->Move();
     FuelRequest();
   }
 
-private:
-  int fuel=100;
+ private:
+  int fuel = 100;
   void FuelRequest() {
     for (int i = 0; i < 10; i++) {
       fuel--;
       std::cout << "Fuel: " << fuel;
     }
   }
-
 };
 
 class DecorforAcceleration : public MovingTarget {
   std::shared_ptr<MovingTarget> moving_target;
 
-public:
-  DecorforAcceleration(MovingTarget *target) : moving_target(target){};
+ public:
+  DecorforAcceleration(MovingTarget* target) : moving_target(target){};
   virtual void Move() {
     moving_target->Move();
     std::cout << "  I am stopped";
