@@ -7,56 +7,59 @@ struct Coordinates {
 
 class MovingTarget {
  public:
+  MovingTarget() = default ;
+  MovingTarget(const MovingTarget&)=delete ;
+  MovingTarget& operator=(const MovingTarget&)=delete;
   virtual void Move() = 0;
-  virtual ~MovingTarget() {}
+  virtual ~MovingTarget()=default;
 };
 
 class F35 : public MovingTarget {
  public:
-  F35() {
-    coordinates.x = 0;
-    coordinates.y = 0;
+  F35():coordinates_{0,0} {
+
   }
-  virtual void Move() {
-    for (int i = 0; i < 10; i++) {
-      coordinates.x = coordinates.x + i;
-      coordinates.y = coordinates.y + i;
-      std::cout << "X: " << coordinates.x << std::endl;
-      std::cout << "Y: " << coordinates.y << std::endl;
-    }
+  virtual void Move()
+   {
+      coordinates_.x += 1;
+      coordinates_.y += 1;
+      std::cout << "X: " << coordinates_.x <<" ";
+      std::cout << "Y: " << coordinates_.y <<" ";
   }
 
  private:
-  Coordinates coordinates;
+  Coordinates coordinates_;
 };
 
-class DecorforFuel : public MovingTarget {
-  std::shared_ptr<MovingTarget> moving_target;
+class FuelDepended : public MovingTarget {
+  std::unique_ptr<MovingTarget> moving_target;
 
  public:
-  DecorforFuel(MovingTarget* target) : moving_target(target) {}
+  FuelDepended( std::unique_ptr<MovingTarget>&& moving_target) : moving_target{std::move(moving_target)},fuel_(100) {}
   virtual void Move() {
+    for (int i =0 ; i<10;++i){
     moving_target->Move();
     FuelRequest();
+    }
   }
 
  private:
-  int fuel = 100;
+  std::unique_ptr<MovingTarget> moving_target_;
+  int fuel_;
   void FuelRequest() {
-    for (int i = 0; i < 10; i++) {
-      fuel--;
-      std::cout << "Fuel: " << fuel;
-    }
+      fuel_-=1;
+      std::cout << "Fuel: " << fuel_<<"; ";
+
   }
 };
 
-class DecorforAcceleration : public MovingTarget {
-  std::shared_ptr<MovingTarget> moving_target;
+class AccelerationDepended : public MovingTarget {
+  std::unique_ptr<MovingTarget> moving_target_;
 
  public:
-  DecorforAcceleration(MovingTarget* target) : moving_target(target){};
+  AccelerationDepended(std::unique_ptr<MovingTarget> &&moving_target) : moving_target_{std::move(moving_target)}{};
   virtual void Move() {
-    moving_target->Move();
-    std::cout << "  I am stopped";
+    moving_target_->Move();
+    std::cout <<std::endl<< "  I am stopped";
   }
 };
